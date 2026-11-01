@@ -3,76 +3,305 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#2563eb">
+<meta name="theme-color" content="#172033">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="古物利益計算">
+<meta name="apple-mobile-web-app-title" content="古物利益計算PRO">
 <link rel="manifest" href="manifest.json">
-<title>古物利益計算</title>
+<title>せっかちマウスの古物利益計算PRO</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#f5f7fb;color:#172033;font-family:-apple-system,BlinkMacSystemFont,"Noto Sans JP",sans-serif}
-main{max-width:520px;margin:auto;padding:20px 16px 30px}.title{font-size:24px;font-weight:900;margin:4px 0 18px}
-.card{background:#fff;border:1px solid #dbe2ea;border-radius:16px;padding:16px;margin-bottom:12px}
-.row{display:grid;grid-template-columns:minmax(0,1fr) 105px;gap:10px;align-items:end}
-label{display:block;font-size:14px;font-weight:700;margin-bottom:7px}
-input{width:100%;min-height:48px;padding:10px 12px;border:1px solid #dbe2ea;border-radius:11px;font-size:18px;background:#fff;color:#172033}
-input:focus{outline:3px solid #eff6ff;border-color:#2563eb}
-.calc{min-height:48px;display:flex;align-items:center;padding:0 12px;border-radius:11px;background:#f8fafc;border:1px solid #dbe2ea;font-size:18px;font-weight:800}
-.small{font-size:13px;color:#64748b;margin:10px 0 5px}.result{padding:20px;border-radius:18px;background:#eff6ff;border:2px solid #2563eb;text-align:center;margin-top:16px}
-.result-title{font-size:14px;font-weight:800;color:#64748b}.profit{font-size:38px;line-height:1.15;font-weight:900;margin-top:6px}.negative{color:#b42318}.hint{text-align:center;color:#64748b;font-size:12px;margin-top:10px}
-@media(max-width:380px){.row{grid-template-columns:minmax(0,1fr) 92px}.profit{font-size:31px}}
+:root{--ink:#172033;--muted:#64748b;--line:#dbe2ea;--paper:#f4f6f9;--blue:#2563eb;--green:#16834a;--red:#b42318}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Noto Sans JP",sans-serif}
+main{max-width:650px;margin:auto;padding:16px 14px 38px}
+header{padding:8px 4px 16px}
+.brand{font-size:12px;font-weight:800;letter-spacing:.06em;color:var(--muted)}
+h1{font-size:23px;line-height:1.25;margin:5px 0 4px;font-weight:900}
+.subtitle{font-size:12px;color:var(--muted)}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 14px}
+.tab{border:1px solid var(--line);background:#fff;border-radius:12px;padding:13px 8px;font-size:14px;font-weight:800;color:var(--muted)}
+.tab.active{background:var(--ink);border-color:var(--ink);color:#fff}
+.panel[hidden]{display:none}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:15px;margin:0 0 12px}
+.card h2{font-size:16px;margin:0 0 13px}
+.card h3{font-size:14px;margin:0 0 10px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.field{min-width:0}
+label{display:block;font-size:12px;font-weight:800;margin:0 0 6px;color:#334155}
+input,select{width:100%;min-height:45px;padding:9px 10px;border:1px solid var(--line);border-radius:10px;font-size:16px;background:#fff;color:var(--ink);min-width:0}
+input:focus,select:focus{outline:3px solid #dbeafe;border-color:var(--blue)}
+small,.help{font-size:11px;color:var(--muted);line-height:1.55}
+.help{margin-top:8px}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+button{border:0;border-radius:10px;padding:11px 13px;font-size:13px;font-weight:800;background:#e8edf4;color:var(--ink)}
+button.primary{background:var(--blue);color:#fff}
+button.dark{background:var(--ink);color:#fff}
+button.danger{background:#fff0ef;color:var(--red)}
+button:active{transform:scale(.99)}
+.result{background:#eef5ff;border:1px solid #bfd7ff;border-radius:16px;padding:17px;margin:12px 0;text-align:center}
+.result .caption{font-size:12px;color:#52647d;font-weight:800}
+.big{font-size:30px;line-height:1.25;font-weight:900;margin:5px 0}
+.green{color:var(--green)}.red{color:var(--red)}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:12px;padding:11px;text-align:left}
+.stat span{display:block;color:var(--muted);font-size:11px;margin-bottom:5px}
+.stat strong{font-size:16px}
+.buyer{border:1px solid var(--line);border-radius:13px;padding:12px;margin:10px 0;background:#fbfcfe}
+.buyerhead{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px}
+.buyerhead strong{font-size:14px}
+.rank{font-size:10px;font-weight:900;padding:4px 7px;border-radius:20px;background:#e8edf4;color:#475569}
+.rank.best{background:#dcfce7;color:#166534}
+.buyergrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.netline{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--line);margin-top:10px;padding-top:10px;font-size:12px}
+.netline strong{font-size:18px}
+.presetline{display:grid;grid-template-columns:1fr 90px auto;gap:7px;align-items:end;margin-top:8px}
+hr{border:0;border-top:1px solid var(--line);margin:14px 0}
+.note{background:#fff8e8;border:1px solid #f4dfaa;padding:11px;border-radius:11px;font-size:11px;color:#75551b;line-height:1.6}
+.footer{text-align:center;color:var(--muted);font-size:10px;padding:15px 5px}
+@media(max-width:390px){main{padding-left:11px;padding-right:11px}.grid3{grid-template-columns:1fr 1fr}.big{font-size:27px}.buyergrid{gap:7px}}
 </style>
 </head>
 <body>
 <main>
-<div class="title">古物利益計算</div>
+<header>
+  <div class="brand">🐭 せっかちマウスの</div>
+  <h1>古物利益計算 PRO</h1>
+  <div class="subtitle">仕入れ判断を、もっと速く・正確に。</div>
+</header>
 
-<div class="card">
-  <div class="row">
-    <div><label for="cost">原価（円）</label><input id="cost" type="number" inputmode="decimal" min="0" placeholder="例：20000"></div>
-    <div><label for="buyRate">購入手数料（%）</label><input id="buyRate" type="number" inputmode="decimal" min="0" step="0.1" value="0"></div>
+<nav class="tabs" aria-label="計算モード">
+  <button class="tab active" id="tabGeneral" type="button">通常の古物計算</button>
+  <button class="tab" id="tabMetal" type="button">💎 貴金属・落札判断</button>
+</nav>
+
+<section class="panel" id="generalPanel">
+  <div class="card">
+    <h2>仕入れ情報</h2>
+    <div class="grid2">
+      <div class="field"><label for="gCost">原価・落札価格（円）</label><input id="gCost" type="number" inputmode="decimal" min="0" placeholder="例：20000"></div>
+      <div class="field"><label for="gBuyRate">購入手数料（%）</label><input id="gBuyRate" type="number" inputmode="decimal" min="0" step="0.1" value="0"></div>
+    </div>
+    <div class="stats"><div class="stat"><span>購入手数料</span><strong id="gBuyFee">0円</strong></div><div class="stat"><span>仕入れ合計</span><strong id="gTotalCost">0円</strong></div></div>
   </div>
-  <div class="small">購入手数料</div>
-  <div id="buyFee" class="calc">0円</div>
-</div>
-
-<div class="card">
-  <label for="sale">売価（円）</label>
-  <input id="sale" type="number" inputmode="decimal" min="0" placeholder="例：26000">
-</div>
-
-<div class="card">
-  <div class="row">
-    <div><label>販売手数料（円）</label><div id="sellFee" class="calc">0円</div></div>
-    <div><label for="sellRate">販売手数料（%）</label><input id="sellRate" type="number" inputmode="decimal" min="0" step="0.1" value="10"></div>
+  <div class="card">
+    <h2>販売情報</h2>
+    <div class="grid2">
+      <div class="field"><label for="gSale">売価（円）</label><input id="gSale" type="number" inputmode="decimal" min="0" placeholder="例：26000"></div>
+      <div class="field"><label for="gSellRate">販売手数料（%）</label><input id="gSellRate" type="number" inputmode="decimal" min="0" step="0.1" value="10"></div>
+      <div class="field"><label for="gShipping">送料（円）</label><input id="gShipping" type="number" inputmode="decimal" min="0" placeholder="例：750"></div>
+      <div class="field"><label>販売手数料</label><div class="calc" id="gSellFee">0円</div></div>
+    </div>
   </div>
-</div>
+  <div class="result"><div class="caption">最終利益</div><div class="big" id="gProfit">0円</div><small>売価 − 原価 − 購入手数料 − 販売手数料 − 送料</small></div>
+</section>
 
-<div class="card">
-  <label for="shipping">送料（円）</label>
-  <input id="shipping" type="number" inputmode="decimal" min="0" placeholder="例：750">
-</div>
+<section class="panel" id="metalPanel" hidden>
+  <div class="card">
+    <h2>① 商品情報</h2>
+    <div class="grid2">
+      <div class="field"><label for="metalType">貴金属の種類</label><select id="metalType"><option value="gold">金</option><option value="pt">プラチナ</option><option value="silver">銀</option></select></div>
+      <div class="field"><label for="purity">品位</label><select id="purity"></select></div>
+      <div class="field"><label for="weight">総重量（g）</label><input id="weight" type="number" inputmode="decimal" min="0" step="0.1" placeholder="例：25.5"></div>
+      <div class="field"><label for="stoneWeight">石・異物重量（g）</label><input id="stoneWeight" type="number" inputmode="decimal" min="0" step="0.1" value="0"></div>
+      <div class="field"><label for="lossRate">精錬・査定減量（%）</label><input id="lossRate" type="number" inputmode="decimal" min="0" max="100" step="0.1" value="0"></div>
+      <div class="field"><label>売却対象重量（概算）</label><div class="calc" id="saleWeight">0.0g</div></div>
+    </div>
+    <div class="help">売却対象重量＝（総重量 − 石・異物重量）×（1 − 減量率）。業者が実測重量を提示する場合は、その重量に合わせて調整してください。</div>
+  </div>
 
-<div class="result" aria-live="polite">
-  <div class="result-title">最終利益</div>
-  <div id="profit" class="profit">0円</div>
-</div>
-<div class="hint">売価 − 原価 − 購入手数料 − 販売手数料 − 送料</div>
+  <div class="card">
+    <h2>② 売却先を比較</h2>
+    <div class="help">各社の査定単価・手数料・減額を入力します。保存した売却先は次回から呼び出せます。保存価格は相場変動があるため、毎回最新価格を確認してください。</div>
+    <div id="buyers"></div>
+    <div class="btnrow"><button class="primary" id="addBuyer" type="button">＋ 売却先を追加</button><button id="saveBuyerPrices" type="button">入力中の売却先・単価を保存</button></div>
+    <div id="savedBuyerArea" class="help"></div>
+  </div>
+
+  <div class="card">
+    <h2>③ 市場手数料・仕入れ経費</h2>
+    <div class="grid2">
+      <div class="field"><label for="hammer">落札価格（円）</label><input id="hammer" type="number" inputmode="numeric" min="0" placeholder="実際の落札額"></div>
+      <div class="field"><label for="marketRate">市場手数料（%）</label><input id="marketRate" type="number" inputmode="decimal" min="0" step="0.1" value="8"></div>
+      <div class="field"><label for="feeTax">手数料にかかる消費税（%）</label><input id="feeTax" type="number" inputmode="decimal" min="0" step="0.1" value="10"></div>
+      <div class="field"><label for="buyExtra">その他仕入れ経費（円）</label><input id="buyExtra" type="number" inputmode="decimal" min="0" value="0"></div>
+      <div class="field"><label for="targetProfit">目標利益（円）</label><input id="targetProfit" type="number" inputmode="numeric" min="0" value="10000"></div>
+    </div>
+    <div class="help">市場手数料の消費税は「市場手数料部分」にのみ加算する設定です。市場ごとの率を下に保存できます。</div>
+    <hr>
+    <h3>市場手数料プリセット</h3>
+    <div class="presetline">
+      <div class="field"><label for="marketName">市場名</label><input id="marketName" placeholder="例：A市場"></div>
+      <div class="field"><label for="marketPresetRate">手数料（%）</label><input id="marketPresetRate" type="number" inputmode="decimal" min="0" step="0.1" value="8"></div>
+      <button id="saveMarket" type="button">保存</button>
+    </div>
+    <div id="marketPresets" class="btnrow"></div>
+    <div class="stats">
+      <div class="stat"><span>市場手数料（税込）</span><strong id="marketFeeTotal">0円</strong></div>
+      <div class="stat"><span>仕入れ総額（落札額＋経費）</span><strong id="acqTotal">0円</strong></div>
+    </div>
+  </div>
+
+  <div class="result">
+    <div class="caption">最高売却先の手取り見込額</div>
+    <div class="big" id="bestNet">—</div>
+    <div id="bestName" class="caption">売却先の査定を入力してください</div>
+    <div class="stats">
+      <div class="stat"><span>現在の落札額での想定利益</span><strong id="actualProfit">—</strong></div>
+      <div class="stat"><span>目標利益を確保できる落札上限</span><strong class="green" id="maxHammer">—</strong></div>
+    </div>
+  </div>
+  <div class="note">重要：表示金額は入力した査定条件に基づく試算です。実際の買取額は、現物検査・品位確認・重量・石や付属物・業者ごとの手数料・相場変動で変わります。保存した単価をそのまま最新の確定査定額として扱わないでください。</div>
+</section>
+<div class="footer">入力した売却先・市場プリセットは、この端末のブラウザ内に保存されます。<br>別の端末やブラウザとは自動同期されません。</div>
 </main>
+
 <script>
-const ids=["cost","buyRate","sale","sellRate","shipping"];
 const $=id=>document.getElementById(id);
-const num=id=>{const n=parseFloat($(id).value);return Number.isFinite(n)&&n>=0?n:0};
+const num=(id)=>{const n=parseFloat($(id)?.value);return Number.isFinite(n)&&n>=0?n:0};
 const yen=n=>Math.round(n).toLocaleString("ja-JP")+"円";
-function update(){
- const cost=num("cost"), buyRate=num("buyRate"), sale=num("sale"), sellRate=num("sellRate"), shipping=num("shipping");
- const buyFee=cost*buyRate/100, sellFee=sale*sellRate/100;
- const profit=sale-cost-buyFee-sellFee-shipping;
- $("buyFee").textContent=yen(buyFee); $("sellFee").textContent=yen(sellFee);
- $("profit").textContent=yen(profit); $("profit").classList.toggle("negative",profit<0);
+const fmt1=n=>(Math.round(n*10)/10).toFixed(1)+"g";
+const STORAGE={buyers:"sekka_mouse_metal_buyers_v1",markets:"sekka_mouse_market_presets_v1"};
+const purities={
+ gold:[["K24",0.999],["K22",0.9167],["K20",0.8333],["K18",0.75],["K14",0.585],["K10",0.4167]],
+ pt:[["Pt1000",1],["Pt950",0.95],["Pt900",0.9],["Pt850",0.85]],
+ silver:[["SV1000",1],["SV950",0.95],["SV925",0.925],["SV900",0.9]]
+};
+function safeLoad(key){try{return JSON.parse(localStorage.getItem(key)||"[]")}catch(e){return[]}}
+function safeSave(key,data){try{localStorage.setItem(key,JSON.stringify(data));return true}catch(e){alert("端末への保存に失敗しました。ブラウザの保存容量・設定をご確認ください。");return false}}
+function setMode(m){
+ const metal=m==="metal";
+ $("generalPanel").hidden=metal;$("metalPanel").hidden=!metal;
+ $("tabGeneral").classList.toggle("active",!metal);$("tabMetal").classList.toggle("active",metal);
 }
-ids.forEach(id=>$(id).addEventListener("input",update)); update();
-if("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(()=>{});
+$("tabGeneral").addEventListener("click",()=>setMode("general"));
+$("tabMetal").addEventListener("click",()=>setMode("metal"));
+
+function updateGeneral(){
+ const cost=num("gCost"),br=num("gBuyRate"),sale=num("gSale"),sr=num("gSellRate"),ship=num("gShipping");
+ const bf=cost*br/100,sf=sale*sr/100,p=sale-cost-bf-sf-ship;
+ $("gBuyFee").textContent=yen(bf);$("gTotalCost").textContent=yen(cost+bf);$("gSellFee").textContent=yen(sf);
+ $("gProfit").textContent=yen(p);$("gProfit").classList.toggle("red",p<0);$("gProfit").classList.toggle("green",p>=0);
+}
+["gCost","gBuyRate","gSale","gSellRate","gShipping"].forEach(id=>$(id).addEventListener("input",updateGeneral));
+
+function updatePurity(){
+ const old=$("purity").value,arr=purities[$("metalType").value];
+ $("purity").innerHTML=arr.map(([name])=>`<option value="${name}">${name}</option>`).join("");
+ if(arr.some(x=>x[0]===old))$("purity").value=old;
+ updateMetal();
+}
+$("metalType").addEventListener("change",updatePurity);
+$("purity").addEventListener("change",updateMetal);
+
+let buyerCount=0;
+function addBuyer(data={}){
+ buyerCount++;
+ const id=buyerCount,wrap=document.createElement("div");wrap.className="buyer";wrap.dataset.id=id;
+ const name=data.name||`売却先${id}`;
+ const price=data.price??"",kind=data.kind||"grade",feeRate=data.feeRate??0,feeFixed=data.feeFixed??0,other=data.other??0;
+ wrap.innerHTML=`
+ <div class="buyerhead"><strong class="buyer-title">${escapeHtml(name)}</strong><span class="rank">比較対象</span></div>
+ <div class="buyergrid">
+  <div class="field"><label>売却先名</label><input class="b-name" value="${escapeAttr(name)}" placeholder="例：A買取店"></div>
+  <div class="field"><label>査定単価（円/g）</label><input class="b-price" type="number" inputmode="decimal" min="0" step="0.1" value="${escapeAttr(price)}" placeholder="例：14500"></div>
+  <div class="field"><label>単価の種類</label><select class="b-kind"><option value="grade" ${kind==="grade"?"selected":""}>品位別のg単価</option><option value="pure" ${kind==="pure"?"selected":""}>純金属のg単価</option></select></div>
+  <div class="field"><label>売却手数料（%）</label><input class="b-fee-rate" type="number" inputmode="decimal" min="0" step="0.1" value="${escapeAttr(feeRate)}"></div>
+  <div class="field"><label>固定手数料（円）</label><input class="b-fee-fixed" type="number" inputmode="decimal" min="0" value="${escapeAttr(feeFixed)}"></div>
+  <div class="field"><label>その他減額・経費（円）</label><input class="b-other" type="number" inputmode="decimal" min="0" value="${escapeAttr(other)}"></div>
+ </div>
+ <div class="netline"><span>最終手取り見込額</span><strong class="b-net">—</strong></div>
+ <div class="btnrow"><button class="load-saved" type="button">保存先から呼び出す</button><button class="remove-buyer danger" type="button">削除</button></div>`;
+ $("buyers").appendChild(wrap);
+ wrap.querySelectorAll("input,select").forEach(el=>el.addEventListener("input",updateMetal));
+ wrap.querySelector(".remove-buyer").addEventListener("click",()=>{wrap.remove();updateMetal()});
+ wrap.querySelector(".load-saved").addEventListener("click",()=>loadSavedInto(wrap));
+ updateMetal();
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function escapeAttr(s){return escapeHtml(s)}
+function selectedPurity(){const list=purities[$("metalType").value];return list.find(x=>x[0]===$("purity").value)?.[1]||1}
+function buyerRows(){return [...$("buyers").querySelectorAll(".buyer")]}
+function getBuyerData(el){
+ return {name:el.querySelector(".b-name").value.trim()||"名称未設定",price:Math.max(0,parseFloat(el.querySelector(".b-price").value)||0),kind:el.querySelector(".b-kind").value,feeRate:Math.max(0,parseFloat(el.querySelector(".b-fee-rate").value)||0),feeFixed:Math.max(0,parseFloat(el.querySelector(".b-fee-fixed").value)||0),other:Math.max(0,parseFloat(el.querySelector(".b-other").value)||0)};
+}
+function updateMetal(){
+ const gross=num("weight"),stones=num("stoneWeight"),loss=Math.min(100,num("lossRate"));
+ const saleWeight=Math.max(0,(gross-stones)*(1-loss/100));
+ $("saleWeight").textContent=fmt1(saleWeight);
+ const purity=selectedPurity(),candidates=[];
+ buyerRows().forEach(el=>{
+  const d=getBuyerData(el),grossValue=saleWeight*d.price*(d.kind==="pure"?purity:1);
+  const fee=grossValue*d.feeRate/100+d.feeFixed+d.other;
+  const net=grossValue-fee;
+  el.querySelector(".buyer-title").textContent=d.name;
+  el.querySelector(".b-net").textContent=d.price>0?yen(net):"—";
+  if(d.price>0)candidates.push({el,...d,grossValue,fee,net});
+ });
+ candidates.sort((a,b)=>b.net-a.net);
+ buyerRows().forEach(el=>{const badge=el.querySelector(".rank");const winner=candidates[0]?.el===el;badge.textContent=winner?"最高額":"比較対象";badge.classList.toggle("best",winner)});
+ const best=candidates[0];
+ const marketRate=num("marketRate")/100,taxRate=num("feeTax")/100,extra=num("buyExtra"),hammer=num("hammer"),target=num("targetProfit");
+ const feeMultiplier=1+marketRate*(1+taxRate);
+ const marketFee=hammer*marketRate*(1+taxRate);
+ const acq=hammer+marketFee+extra;
+ $("marketFeeTotal").textContent=yen(marketFee);$("acqTotal").textContent=yen(acq);
+ if(!best){
+  $("bestNet").textContent="—";$("bestName").textContent="売却先の査定単価を入力してください";
+  $("actualProfit").textContent="—";$("maxHammer").textContent="—";return;
+ }
+ $("bestNet").textContent=yen(best.net);$("bestName").textContent="最高売却先："+best.name;
+ const saleProfit=best.net-acq;
+ $("actualProfit").textContent=yen(saleProfit);$("actualProfit").classList.toggle("red",saleProfit<0);$("actualProfit").classList.toggle("green",saleProfit>=0);
+ const ceiling=Math.floor((best.net-target-extra)/feeMultiplier);
+ $("maxHammer").textContent=ceiling>=0?yen(ceiling):"仕入れ不可";
+}
+["weight","stoneWeight","lossRate","hammer","marketRate","feeTax","buyExtra","targetProfit"].forEach(id=>$(id).addEventListener("input",updateMetal));
+$("addBuyer").addEventListener("click",()=>addBuyer());
+
+function saveBuyerPrices(){
+ const data=buyerRows().map(el=>getBuyerData(el)).filter(d=>d.price>0);
+ if(!data.length){alert("単価を入力した売却先がありません。");return}
+ if(safeSave(STORAGE.buyers,data)){renderSavedBuyers();alert("売却先と入力中の査定単価を保存しました。次回も呼び出せます。")}
+}
+function renderSavedBuyers(){
+ const data=safeLoad(STORAGE.buyers),area=$("savedBuyerArea");
+ if(!data.length){area.textContent="保存済みの売却先はありません。";return}
+ area.innerHTML="<strong>保存済み：</strong> "+data.map((d,i)=>`<button type="button" data-index="${i}">${escapeHtml(d.name)}（${yen(d.price)}/g）</button>`).join(" ");
+ area.querySelectorAll("button").forEach(btn=>btn.addEventListener("click",()=>{const d=data[Number(btn.dataset.index)];addBuyer(d)}));
+}
+function loadSavedInto(wrap){
+ const data=safeLoad(STORAGE.buyers);
+ if(!data.length){alert("保存済みの売却先がありません。先に入力内容を保存してください。");return}
+ const choice=prompt("呼び出す番号を入力してください：\n"+data.map((d,i)=>`${i+1}. ${d.name}（${d.price}円/g）`).join("\n"));
+ const index=Number(choice)-1;if(!Number.isInteger(index)||!data[index])return;
+ const d=data[index];
+ wrap.querySelector(".b-name").value=d.name;wrap.querySelector(".b-price").value=d.price;wrap.querySelector(".b-kind").value=d.kind;
+ wrap.querySelector(".b-fee-rate").value=d.feeRate;wrap.querySelector(".b-fee-fixed").value=d.feeFixed;wrap.querySelector(".b-other").value=d.other;
+ updateMetal();
+}
+$("saveBuyerPrices").addEventListener("click",saveBuyerPrices);
+
+function renderMarkets(){
+ const data=safeLoad(STORAGE.markets),area=$("marketPresets");area.innerHTML="";
+ data.forEach((d,i)=>{
+  const b=document.createElement("button");b.type="button";b.textContent=`${d.name} ${d.rate}%`;
+  b.addEventListener("click",()=>{$("marketRate").value=d.rate;updateMetal()});
+  const del=document.createElement("button");del.type="button";del.className="danger";del.textContent="×";
+  del.addEventListener("click",()=>{const next=safeLoad(STORAGE.markets);next.splice(i,1);safeSave(STORAGE.markets,next);renderMarkets()});
+  area.append(b,del);
+ });
+ if(!data.length)area.textContent="保存済みの市場設定はありません。";
+}
+$("saveMarket").addEventListener("click",()=>{
+ const name=$("marketName").value.trim(),rate=num("marketPresetRate");
+ if(!name){alert("市場名を入力してください。");return}
+ const data=safeLoad(STORAGE.markets);data.push({name,rate});
+ if(safeSave(STORAGE.markets,data)){ $("marketName").value="";renderMarkets(); }
+});
+
+updateGeneral();updatePurity();addBuyer({name:"売却先A"});addBuyer({name:"売却先B"});renderSavedBuyers();renderMarkets();
+if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
 </script>
 </body>
 </html>

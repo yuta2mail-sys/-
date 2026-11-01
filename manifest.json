@@ -1,9 +1,9 @@
 {
-  "name":"古物利益計算",
-  "short_name":"利益計算",
-  "start_url":"./",
-  "display":"standalone",
-  "background_color":"#f5f7fb",
-  "theme_color":"#2563eb",
-  "lang":"ja"
+  "name": "せっかちマウスの古物利益計算PRO",
+  "short_name": "古物利益PRO",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f4f6f9",
+  "theme_color": "#172033",
+  "description": "通常の古物利益計算と貴金属の売却先比較・落札上限計算"
 }
