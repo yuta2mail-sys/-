@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#2563eb">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="古物利益計算">
+<link rel="manifest" href="manifest.json">
+<title>古物利益計算</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f5f7fb;color:#172033;font-family:-apple-system,BlinkMacSystemFont,"Noto Sans JP",sans-serif}
+main{max-width:520px;margin:auto;padding:20px 16px 30px}.title{font-size:24px;font-weight:900;margin:4px 0 18px}
+.card{background:#fff;border:1px solid #dbe2ea;border-radius:16px;padding:16px;margin-bottom:12px}
+.row{display:grid;grid-template-columns:minmax(0,1fr) 105px;gap:10px;align-items:end}
+label{display:block;font-size:14px;font-weight:700;margin-bottom:7px}
+input{width:100%;min-height:48px;padding:10px 12px;border:1px solid #dbe2ea;border-radius:11px;font-size:18px;background:#fff;color:#172033}
+input:focus{outline:3px solid #eff6ff;border-color:#2563eb}
+.calc{min-height:48px;display:flex;align-items:center;padding:0 12px;border-radius:11px;background:#f8fafc;border:1px solid #dbe2ea;font-size:18px;font-weight:800}
+.small{font-size:13px;color:#64748b;margin:10px 0 5px}.result{padding:20px;border-radius:18px;background:#eff6ff;border:2px solid #2563eb;text-align:center;margin-top:16px}
+.result-title{font-size:14px;font-weight:800;color:#64748b}.profit{font-size:38px;line-height:1.15;font-weight:900;margin-top:6px}.negative{color:#b42318}.hint{text-align:center;color:#64748b;font-size:12px;margin-top:10px}
+@media(max-width:380px){.row{grid-template-columns:minmax(0,1fr) 92px}.profit{font-size:31px}}
+</style>
+</head>
+<body>
+<main>
+<div class="title">古物利益計算</div>
+
+<div class="card">
+  <div class="row">
+    <div><label for="cost">原価（円）</label><input id="cost" type="number" inputmode="decimal" min="0" placeholder="例：20000"></div>
+    <div><label for="buyRate">購入手数料（%）</label><input id="buyRate" type="number" inputmode="decimal" min="0" step="0.1" value="0"></div>
+  </div>
+  <div class="small">購入手数料</div>
+  <div id="buyFee" class="calc">0円</div>
+</div>
+
+<div class="card">
+  <label for="sale">売価（円）</label>
+  <input id="sale" type="number" inputmode="decimal" min="0" placeholder="例：26000">
+</div>
+
+<div class="card">
+  <div class="row">
+    <div><label>販売手数料（円）</label><div id="sellFee" class="calc">0円</div></div>
+    <div><label for="sellRate">販売手数料（%）</label><input id="sellRate" type="number" inputmode="decimal" min="0" step="0.1" value="10"></div>
+  </div>
+</div>
+
+<div class="card">
+  <label for="shipping">送料（円）</label>
+  <input id="shipping" type="number" inputmode="decimal" min="0" placeholder="例：750">
+</div>
+
+<div class="result" aria-live="polite">
+  <div class="result-title">最終利益</div>
+  <div id="profit" class="profit">0円</div>
+</div>
+<div class="hint">売価 − 原価 − 購入手数料 − 販売手数料 − 送料</div>
+</main>
+<script>
+const ids=["cost","buyRate","sale","sellRate","shipping"];
+const $=id=>document.getElementById(id);
+const num=id=>{const n=parseFloat($(id).value);return Number.isFinite(n)&&n>=0?n:0};
+const yen=n=>Math.round(n).toLocaleString("ja-JP")+"円";
+function update(){
+ const cost=num("cost"), buyRate=num("buyRate"), sale=num("sale"), sellRate=num("sellRate"), shipping=num("shipping");
+ const buyFee=cost*buyRate/100, sellFee=sale*sellRate/100;
+ const profit=sale-cost-buyFee-sellFee-shipping;
+ $("buyFee").textContent=yen(buyFee); $("sellFee").textContent=yen(sellFee);
+ $("profit").textContent=yen(profit); $("profit").classList.toggle("negative",profit<0);
+}
+ids.forEach(id=>$(id).addEventListener("input",update)); update();
+if("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(()=>{});
+</script>
+</body>
+</html>
